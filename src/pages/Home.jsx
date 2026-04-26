@@ -1,13 +1,13 @@
-import ProductCard from "../Components/ProductCard";
 import { getProducts } from "../data/product";
 import { Link } from "react-router-dom";
+import ProductCard from "../Components/ProductCard";
 
 export default function Home() {
   const products = getProducts();
   return (
     <div className="page">
       <div className="home-hero">
-        <h1>Welcome to ShopHub</h1>
+        <h1 className="home-title">Welcome to ShopHub</h1>
         <p className="home-subtitle">
           Discover amazing product at greate product
         </p>
