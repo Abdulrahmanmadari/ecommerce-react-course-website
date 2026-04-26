@@ -1,13 +1,13 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
   const [mode, setMode] = useState("signup");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { signUp, user, logout, login } = useContext(AuthContext);
+  const { signUp, user, login } = useAuth();
 
   const {
     register,
@@ -24,18 +24,16 @@ export default function Auth() {
       result = login(data.email, data.password);
     }
 
-    if (result.success) {
+    if (result?.success) {
       navigate("/");
     } else {
-      setError(result.error);
+      setError(result?.error || "Authentication failed");
     }
   }
   return (
     <div className="page">
       <div className="container">
         <div className="auth-container">
-          {user && <p>User logged in:{user.email}</p>}
-          <button onClick={() => logout()}>Logout</button>
           <h1 className="page-title">
             {mode === "signup" ? "Sign Up" : "Login"}
           </h1>
@@ -64,10 +62,10 @@ export default function Auth() {
                 type="password"
                 id="password"
                 {...register("password", {
-                  required: "password is required",
+                  required: "Password is required",
                   minLength: {
                     value: 6,
-                    message: "Password must be at least  characters",
+                    message: "Password must be at least 6 characters",
                   },
                   maxLength: {
                     value: 12,

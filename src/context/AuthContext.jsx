@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { createContext } from "react";
+import { useState, useContext, createContext } from "react";
 export const AuthContext = createContext(null);
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(
@@ -24,18 +23,22 @@ export default function AuthProvider({ children }) {
   }
   function login(email, password) {
     const users = JSON.parse(localStorage.getItem("users")) || [];
+    const existingUser = users.find(
+      (u) => u.email === email && u.password === password,
+    );
+
+    if (!existingUser) {
+      return { success: false, error: "Invalid email or password" };
+    }
+
+    localStorage.setItem("currentUserEmail", email);
+    setUser({ email });
+    return { success: true };
   }
 
   function logout() {
     localStorage.removeItem("currentUserEmail");
-    const user = users.find(
-      (u) => u.email === email && u.password === password,
-    );
-    if (!user) {
-      return { success: false, error: "Invalid email or password" };
-    }
-    localStorage.setItem("currentUserEmail", email);
-    setUser({ email });
+    setUser(null);
     return { success: true };
   }
   return (
@@ -43,4 +46,12 @@ export default function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 }
