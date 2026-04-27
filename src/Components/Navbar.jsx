@@ -9,7 +9,7 @@ export default function Navbar() {
         <Link to="/" className="nav-brand">
           ShopHub
         </Link>
-        <div className="navbar-link">
+        <div className="navbar-links">
           <Link to="/" className="navbar-link">
             Home
           </Link>
